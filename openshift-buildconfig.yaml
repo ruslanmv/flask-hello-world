@@ -1,0 +1,31 @@
+apiVersion: build.openshift.io/v1
+kind: BuildConfig
+metadata:
+  name: python-app-build # This name is used in the 'oc start-build' command
+  labels:
+    app: python # Or your application's name
+spec:
+  source:
+    # For building from local source with 'oc start-build --from-dir=.'
+    type: Binary
+    binary: {}
+  strategy:
+    type: Docker
+    dockerStrategy:
+      # Path to your Dockerfile, relative to the context provided by --from-dir
+      dockerfilePath: docker/Dockerfile
+  output:
+    to:
+      kind: ImageStreamTag
+      # This should match the imageName used in your 'deploy.yaml'
+      name: python-image:latest
+  resources:
+    # Specify resource requests and limits for the main build container.
+    # These values will be used for the pod executing the Docker build.
+    # This helps satisfy ResourceQuotas. Adjust values as needed.
+    requests:
+      cpu: "500m"
+      memory: "512Mi"
+    limits:
+      cpu: "1"
+      memory: "1Gi"
