@@ -8,12 +8,11 @@ A minimal Python web application using [Flask](https://flask.palletsprojects.com
 
 This application responds with `"Hello World!"` when accessed via its root route (`/`). It is configured to run in containerized environments and includes resources for building, deploying, and developing using modern tools like OpenShift Dev Spaces or Kubernetes.
 
----
+
 
 ## 📁 Project Structure
 
 ```
-
 .
 ├── app.py               # Main Flask app
 ├── devfile.yaml         # Devfile spec for cloud-native development
@@ -24,10 +23,7 @@ This application responds with `"Hello World!"` when accessed via its root route
 ├── .gitignore
 ├── LICENSE
 └── README.md
-
-````
-
----
+```
 
 ## 🧪 Requirements
 
@@ -36,13 +32,13 @@ This application responds with `"Hello World!"` when accessed via its root route
 - Kubernetes (optional: Minikube, OpenShift, etc.)
 - `pip` package manager
 
----
+
 
 ## ⚙️ Local Development
 
 1. **Install dependencies:**
 
-   ```bash
+```bash
    pip install -r requirements.txt
 ````
 
@@ -58,7 +54,7 @@ This application responds with `"Hello World!"` when accessed via its root route
    http://localhost:8080
    ```
 
----
+
 
 ## 🐳 Docker
 
@@ -74,7 +70,7 @@ docker build -t flask-hello-world -f docker/Dockerfile .
 docker run -p 8081:8081 flask-hello-world
 ```
 
----
+
 
 ## ☸️ Kubernetes Deployment
 
@@ -100,13 +96,12 @@ docker run -p 8081:8081 flask-hello-world
    http://localhost:8081
    ```
 
----
+
 
 ## 🧪 Devfile Support
 
 This project includes a `devfile.yaml` for seamless integration with cloud IDEs like:
 
-* [OpenShift Dev Spaces](https://developers.redhat.com/products/dev-spaces/overview)
+* [OpenShift Dev Spaces](https://docs.redhat.com/en/documentation/red_hat_openshift_dev_spaces/3.0)
 * [Eclipse Che](https://www.eclipse.org/che/)
 
----
