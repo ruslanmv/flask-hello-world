@@ -43,10 +43,10 @@ components:
           secure: true
     attributes:
       deployment/replicas: 1
-      # CPU + Memory requests
+      # Resource requests for the deployment
       deployment/cpuRequest: 10m
       deployment/memoryRequest: 50Mi
-      # CPU + Memory limits (to satisfy namespace quota)
+      # Resource limits to satisfy the namespace quota
       deployment/cpuLimit: 100m
       deployment/memoryLimit: 128Mi
       deployment/container-port: 8081
