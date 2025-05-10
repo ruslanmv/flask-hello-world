@@ -16,10 +16,39 @@ metadata:
   supportUrl: https://github.com/devfile-samples/devfile-support#support-information
   attributes:
     alpha.dockerimage-port: 8081
+    # These attributes solve the resource quota error
+    pod-overrides:
+      containers:
+        - name: docker-build
+          resources:
+            requests:
+              cpu: "500m"
+              memory: "256Mi"
+            limits:
+              cpu: "1"
+              memory: "512Mi"
+        - name: git-clone
+          resources:
+            requests:
+              cpu: "500m"
+              memory: "256Mi"
+            limits:
+              cpu: "1"
+              memory: "512Mi"
+        - name: manage-dockerfile
+          resources:
+            requests:
+              cpu: "500m"
+              memory: "256Mi"
+            limits:
+              cpu: "1"
+              memory: "512Mi"
+
 parent:
   id: python
   registryUrl: 'https://registry.devfile.io'
   version: 2.1.0
+
 components:
   - name: image-build
     image:
@@ -28,14 +57,6 @@ components:
         uri: docker/Dockerfile
         buildContext: .
         rootRequired: false
-      # Add resource requirements here
-      resources:
-        requests:
-          cpu: "500m"
-          memory: "256Mi"
-        limits:
-          cpu: "1"
-          memory: "512Mi"
 
   - name: kubernetes-deploy
     attributes:
