@@ -5,8 +5,7 @@ metadata:
   projectType: Python
   displayName: Python
   icon: https://raw.githubusercontent.com/devfile-samples/devfile-stack-icons/main/python.svg
-  description:
-    'Python is an interpreted, object-oriented, high-level programming language…'
+  description: 'Python is an interpreted, object-oriented, high-level programming language…'
   language: Python
   version: 1.0.1
   provider: Red Hat
@@ -29,14 +28,22 @@ components:
         uri: docker/Dockerfile
         buildContext: .
         rootRequired: false
+      # Add resource requirements here
+      resources:
+        requests:
+          cpu: "500m"
+          memory: "256Mi"
+        limits:
+          cpu: "1"
+          memory: "512Mi"
 
   - name: kubernetes-deploy
     attributes:
       deployment/replicas: 1
-      deployment/cpuRequest: 1           # request 1 core
-      deployment/memoryRequest: 128Mi   # request 128Mi
-      deployment/cpuLimit: 2            # limit 2 cores
-      deployment/memoryLimit: 256Mi     # limit 256Mi
+      deployment/cpuRequest: 1
+      deployment/memoryRequest: 128Mi
+      deployment/cpuLimit: 2
+      deployment/memoryLimit: 256Mi
       deployment/container-port: 8081
     kubernetes:
       uri: deploy.yaml
