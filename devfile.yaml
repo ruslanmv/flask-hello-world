@@ -25,69 +25,45 @@ parent:
   version: 2.1.0
 
 components:
-  # This component defines the OpenShift BuildConfig manifest with resource specifications.
-  # The actual YAML content should be in a file named 'openshift-buildconfig.yaml' in your project.
-  - name: python-buildconfig-k8s
-    kubernetes:
-      uri: openshift-buildconfig.yaml
+  - name: image-build
+    image:
+      imageName: python-image:latest
+      dockerfile:
+        uri: docker/Dockerfile
+        buildContext: .
+        rootRequired: false
 
-  # This component defines your application's runtime deployment.
-  # The actual YAML content should be in 'deploy.yaml'.
   - name: kubernetes-deploy
     kubernetes:
       uri: deploy.yaml
       endpoints:
         - name: http-8081
           targetPort: 8081
-          path: /          # Path for the endpoint, if applicable
-          # secure: true # 'secure' is for TLS. Set based on your service. Assumed false if not specified or handled by route.
+          path: /
+          secure: true
     attributes:
-      # These attributes can be used by tools to override values in deploy.yaml
       deployment/replicas: 1
-      deployment/cpuRequest: "10m"
-      deployment/memoryRequest: "50Mi"
-      deployment/cpuLimit: "100m"
-      deployment/memoryLimit: "128Mi"
-      # Note: 'deployment/container-port' is not a standard devfile attribute for setting the port
-      # in the Kubernetes manifest. Ensure the container port is correctly defined within 'deploy.yaml'.
-      # The 'endpoints' field above is the standard way to declare discoverable ports.
+      # CPU + Memory requests
+      deployment/cpuRequest: 10m
+      deployment/memoryRequest: 50Mi
+      # CPU + Memory limits (to satisfy namespace quota)
+      deployment/cpuLimit: 100m
+      deployment/memoryLimit: 128Mi
+      deployment/container-port: 8081
 
 commands:
-  # 1. Apply the BuildConfig definition to the cluster.
-  - id: apply-buildconfig
+  - id: build-image
     apply:
-      component: python-buildconfig-k8s
+      component: image-build
 
-  # 2. Start the OpenShift build.
-  # This command executes 'oc start-build'. It requires 'oc' CLI to be available
-  # in the execution environment (e.g., a tools container or the environment where devfile commands are run).
-  # It assumes the BuildConfig created is named 'python-app-build' (matching openshift-buildconfig.yaml).
-  - id: start-build
-    exec:
-      # An exec command needs a component to run in.
-      # If you have a tools container defined with 'oc', use it here.
-      # For this example, we'll assume 'oc' is in the PATH of the environment running the devfile command.
-      # If your devfile tool (like odo) provides a default exec container or context, this might work.
-      # Otherwise, you may need to define a specific container component with 'oc' installed.
-      # Using 'kubernetes-deploy' as a placeholder component for context, but ideally, this would be a tools image.
-      component: kubernetes-deploy # Or a dedicated tools component
-      commandLine: "oc start-build python-app-build --from-dir=. --follow"
-      workingDir: ${PROJECT_SOURCE} # Devfile v2 variable for project root
-      group:
-        kind: build
-        isDefault: false # Set to true if this is the default build command
-
-  # 3. Deploy the application using the built image.
   - id: deployk8s
     apply:
       component: kubernetes-deploy
 
-  # Composite command for a full build and deploy sequence.
   - id: deploy
     composite:
       commands:
-        - apply-buildconfig
-        - start-build
+        - build-image
         - deployk8s
       group:
         kind: deploy
