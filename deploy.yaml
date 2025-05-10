@@ -21,8 +21,11 @@ spec:
               protocol: TCP
           resources:
             requests:
+              cpu:    "10m"
               memory: "50Mi"
-              cpu: "10m"
+            limits:                   # ← add this entire section
+              cpu:    "50m"
+              memory: "128Mi"
 ---
 kind: Service
 apiVersion: v1
