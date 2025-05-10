@@ -1,3 +1,4 @@
+# devfile.yaml
 schemaVersion: 2.2.0
 metadata:
   name: python
@@ -32,10 +33,10 @@ components:
   - name: kubernetes-deploy
     attributes:
       deployment/replicas: 1
-      deployment/cpuRequest: 10m        # minimum guaranteed
-      deployment/memoryRequest: 50Mi    # minimum guaranteed
-      deployment/cpuLimit: 50m          # **add this**
-      deployment/memoryLimit: 128Mi     # **and this**
+      deployment/cpuRequest: 1           # request 1 core
+      deployment/memoryRequest: 128Mi   # request 128Mi
+      deployment/cpuLimit: 2            # limit 2 cores
+      deployment/memoryLimit: 256Mi     # limit 256Mi
       deployment/container-port: 8081
     kubernetes:
       uri: deploy.yaml

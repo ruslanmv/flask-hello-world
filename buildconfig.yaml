@@ -1,44 +1,36 @@
+# buildconfig.yaml
 apiVersion: build.openshift.io/v1
 kind: BuildConfig
 metadata:
   name: flask-hello-world
 spec:
-  # 1) Source from your GitHub repository
   source:
     type: Git
     git:
       uri: "https://github.com/ruslanmv/flask-hello-world.git"
       ref: main
     contextDir: .
-  
-  # 2) Docker build strategy with per-step resources
   strategy:
     type: Docker
     dockerStrategy:
       resources:
         requests:
-          cpu:    "10m"    # must be ≤ your requests.cpu quota (3)
-          memory: "64Mi"   # must be ≤ your requests.memory quota (6Gi)
+          cpu:    "1"      # request 1 core
+          memory: "128Mi"  # request 128Mi
         limits:
-          cpu:    "50m"    # must be ≤ your limits.cpu quota (6)
-          memory: "128Mi"  # must be ≤ your limits.memory quota (12Gi)
-  
-  # 3) Top-level resources also apply to git-clone & manage-dockerfile steps
-  resources:
+          cpu:    "2"      # limit 2 cores
+          memory: "256Mi"  # limit 256Mi
+  resources:                      # applies to git-clone & manage-dockerfile too
     requests:
-      cpu:    "10m"
-      memory: "64Mi"
-    limits:
-      cpu:    "50m"
+      cpu:    "1"
       memory: "128Mi"
-
-  # 4) Send the built image into this ImageStreamTag
+    limits:
+      cpu:    "2"
+      memory: "256Mi"
   output:
     to:
       kind: ImageStreamTag
       name: "flask-hello-world:latest"
-
-  # 5) Automatically rebuild on config or image changes
   triggers:
     - type: ConfigChange
     - type: ImageChange
